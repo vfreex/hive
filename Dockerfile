@@ -1,4 +1,4 @@
-FROM fedora:28 as build
+FROM fedora:29 as build
 
 RUN yum -y update && yum clean all
 
