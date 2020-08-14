@@ -1,9 +1,6 @@
-FROM registry.svc.ci.openshift.org/ocp/4.6:metering-hadoop AS build
+FROM registry.svc.ci.openshift.org/openshift/release:rhel-8-release-openshift-4.6 AS build
 
-RUN yum -y install --setopt=skip_missing_names_on_install=False \
-        curl \
-    && yum clean all \
-    && rm -rf /var/cache/yum
+RUN yum -y install --setopt=skip_missing_names_on_install=False curl
 
 RUN mkdir /build
 COPY . /build
