@@ -1,33 +1,16 @@
-FROM ubi8:8-released AS build
+FROM registry.svc.ci.openshift.org/openshift/release:rhel-8-release-openshift-4.6 AS build
 
-RUN yum -y update && yum clean all
-
-RUN yum -y install --setopt=skip_missing_names_on_install=False \
-        curl \
-    && yum clean all \
-    && rm -rf /var/cache/yum
+RUN yum -y install --setopt=skip_missing_names_on_install=False curl
 
 RUN mkdir /build
 COPY . /build
 
 WORKDIR /build
 
-ENV RH_HIVE_PATCH_VERSION 00002
-ENV HIVE_VERSION 2.3.3
+COPY opt_maven_install.sh /tmp/
+RUN chmod u+x /tmp/opt_maven_install.sh && /tmp/opt_maven_install.sh $OPENSHIFT_CI
 
-ENV HIVE_RELEASE_URL http://download.eng.bos.redhat.com/brewroot/packages/org.apache.hive-hive/${HIVE_VERSION}.redhat_${RH_HIVE_PATCH_VERSION}/1/maven/org/apache/hive/hive-packaging/${HIVE_VERSION}.redhat-${RH_HIVE_PATCH_VERSION}/hive-packaging-${HIVE_VERSION}.redhat-${RH_HIVE_PATCH_VERSION}-bin.tar.gz
-ENV HIVE_OUT /build/packaging/target/apache-hive-$HIVE_VERSION-bin/apache-hive-$HIVE_VERSION-bin
-
-RUN curl -fSLs \
-    $HIVE_RELEASE_URL \
-    -o /tmp/hive-bin.tar.gz
-
-RUN mkdir -p $(dirname $HIVE_OUT) && \
-    tar -xvf /tmp/hive-bin.tar.gz -C /tmp \
-    && mv /tmp/apache-hive-${HIVE_VERSION}.redhat-${RH_HIVE_PATCH_VERSION}-bin/ \
-    $HIVE_OUT
-
-FROM openshift/ose-metering-hadoop:latest
+FROM registry.svc.ci.openshift.org/ocp/4.6:metering-hadoop
 
 ENV HIVE_VERSION=2.3.3
 ENV HIVE_HOME=/opt/hive
