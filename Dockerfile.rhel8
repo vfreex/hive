@@ -4,7 +4,6 @@ RUN yum -y install --setopt=skip_missing_names_on_install=False curl
 
 RUN mkdir /build
 COPY . /build
-
 WORKDIR /build
 
 COPY opt_maven_install.sh /tmp/
