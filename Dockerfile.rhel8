@@ -19,13 +19,10 @@ RUN mkdir -p /opt
 WORKDIR /opt
 
 USER root
-
 RUN yum -y update && \
-    yum install --setopt=skip_missing_names_on_install=False -y \
-        postgresql-jdbc \
-        openssl \
-    && yum clean all \
-    && rm -rf /var/cache/yum
+    yum install --setopt=skip_missing_names_on_install=False -y postgresql-jdbc openssl && \
+    yum clean all && \
+    rm -rf /var/cache/yum
 
 COPY --from=build /build/packaging/target/apache-hive-$HIVE_VERSION-bin/apache-hive-$HIVE_VERSION-bin $HIVE_HOME
 COPY --from=build /build/mysql-connector-java.jar /usr/lib/java/mysql-java-connector.jar
