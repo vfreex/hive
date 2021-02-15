@@ -36,6 +36,8 @@ RUN ln -s ${HADOOP_HOME}/share/hadoop/tools/lib/*aws* $HIVE_HOME/lib
 RUN ln -s /usr/lib/java/mysql-java-connector.jar "$HIVE_HOME/lib/mysql-connector-java.jar"
 # Configure Postgesql connector jar to be available to hive
 RUN ln -s /usr/share/java/postgresql-jdbc.jar "$HIVE_HOME/lib/postgresql-jdbc.jar"
+# Debug artifact for conflicting Guava JAR versioning
+RUN find /opt/ -name '*guava-*.jar'
 
 # https://docs.oracle.com/javase/7/docs/technotes/guides/net/properties.html
 # Java caches dns results forever, don't cache dns results forever:
