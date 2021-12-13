@@ -22,7 +22,7 @@ if [[ "$1" == "true" ]]; then
 	mvn dependency:get -Dartifact=mysql:mysql-connector-java:${MYSQL_VERSION} -Ddest=/build/mysql-connector-java.jar
     mvn -B -e -T 1C -DskipTests=true -DfailIfNoTests=false -Dtest=false clean package -Pdist
     #   remove log4j possibility to use JNDI
-    zip -q -d log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
+    zip -q -d lib/log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
 else
     # Otherwise this is a production brew build by ART
 	export RH_HIVE_PATCH_VERSION=00002
