@@ -24,6 +24,7 @@ RUN yum -y update && \
     yum install --setopt=skip_missing_names_on_install=False -y \
         postgresql-jdbc \
         openssl \
+        zip \
     && yum clean all \
     && rm -rf /var/cache/yum
 
@@ -33,6 +34,8 @@ WORKDIR $HIVE_HOME
 
 ENV HADOOP_CLASSPATH $HIVE_HOME/hcatalog/share/hcatalog/*:${HADOOP_CLASSPATH}
 
+# make JNDI impossible from log4j usages
+RUN zip -q -d lib/log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
 # Configure Hadoop AWS Jars to be available to hive
 RUN ln -s ${HADOOP_HOME}/share/hadoop/tools/lib/*aws* $HIVE_HOME/lib
 # Configure MySQL connector jar to be available to hive
