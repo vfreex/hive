@@ -41,7 +41,7 @@ else
 	  $HIVE_OUT
 	  #   remove log4j possibility to use JNDI
 	  pushd $HIVE_OUT
-      zip -q -d log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
+      zip -q -d lib/log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
       popd
 
 	# Note(tflannag): In previous metering releases, we got the mysql-connector-java jar
