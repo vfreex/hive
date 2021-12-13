@@ -19,7 +19,9 @@ if [[ "$1" == "true" ]]; then
 	popd
 
 	mvn dependency:get -Dartifact=mysql:mysql-connector-java:${MYSQL_VERSION} -Ddest=/build/mysql-connector-java.jar
-  	mvn -B -e -T 1C -DskipTests=true -DfailIfNoTests=false -Dtest=false clean package -Pdist
+    mvn -B -e -T 1C -DskipTests=true -DfailIfNoTests=false -Dtest=false clean package -Pdist
+    #   remove log4j possibility to use JNDI
+    zip -q -d log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
 else
     # Otherwise this is a production brew build by ART
 	export RH_HIVE_PATCH_VERSION=00002
@@ -36,6 +38,10 @@ else
 	  tar -xvf /tmp/hive-bin.tar.gz -C /tmp \
 	  && mv /tmp/apache-hive-${HIVE_VERSION}.redhat-${RH_HIVE_PATCH_VERSION}-bin/ \
 	  $HIVE_OUT
+	  #   remove log4j possibility to use JNDI
+	  pushd $HIVE_OUT
+      zip -q -d log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
+      popd
 
 	# Note(tflannag): In previous metering releases, we got the mysql-connector-java jar
 	# for free. Now, images use RHEL8 as the base image and in order to maintain upgrades
