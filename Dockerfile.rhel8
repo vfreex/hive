@@ -31,7 +31,7 @@ WORKDIR $HIVE_HOME
 ENV HADOOP_CLASSPATH $HIVE_HOME/hcatalog/share/hcatalog/*:${HADOOP_CLASSPATH}
 
 # make JNDI impossible from log4j usages
-RUN zip -q -d lib/log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
+RUN find ./ -name '*.jar' -type f -print0 | xargs -0 grep JndiLookup.class | awk '{ print $3 }' | xargs -L 1 -I {} /bin/bash -c 'echo {}; zip -q -d '{}' org/apache/logging/log4j/core/lookup/JndiLookup.class'
 
 # Configure Hadoop AWS Jars to be available to hive
 RUN ln -s ${HADOOP_HOME}/share/hadoop/tools/lib/*aws* $HIVE_HOME/lib
