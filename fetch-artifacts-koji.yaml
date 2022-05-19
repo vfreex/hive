@@ -1,0 +1,9 @@
+- nvr: org.apache.hive-hive-2.3.3.redhat_00002-1
+  archives:
+  - filename: hive-packaging-2.3.3.redhat-00002-bin.tar.gz
+    group_id: org.apache.hive
+- nvr: mysql-mysql-connector-java-8.0.21.redhat_00001-1
+  archives:
+  - filename: mysql-connector-java-8.0.21.redhat-00001.jar
+    group_id: mysql
+
