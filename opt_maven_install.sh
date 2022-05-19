@@ -22,10 +22,11 @@ if [[ "$1" == "true" ]]; then
   	mvn -B -e -T 1C -DskipTests=true -DfailIfNoTests=false -Dtest=false clean package -Pdist
 else
     # Otherwise this is a production brew build by ART
+        MAVEN_REPO_URL=${MAVEN_REPO_URL:-file:///build/artifacts}
 	export RH_HIVE_PATCH_VERSION=00002
 	export HIVE_VERSION=2.3.3
 
-	export HIVE_RELEASE_URL=http://download.eng.bos.redhat.com/brewroot/packages/org.apache.hive-hive/${HIVE_VERSION}.redhat_${RH_HIVE_PATCH_VERSION}/1/maven/org/apache/hive/hive-packaging/${HIVE_VERSION}.redhat-${RH_HIVE_PATCH_VERSION}/hive-packaging-${HIVE_VERSION}.redhat-${RH_HIVE_PATCH_VERSION}-bin.tar.gz
+	export HIVE_RELEASE_URL=$MAVEN_REPO_URL/org/apache/hive/hive-packaging/${HIVE_VERSION}.redhat-${RH_HIVE_PATCH_VERSION}/hive-packaging-${HIVE_VERSION}.redhat-${RH_HIVE_PATCH_VERSION}-bin.tar.gz
 	export HIVE_OUT=/build/packaging/target/apache-hive-$HIVE_VERSION-bin/apache-hive-$HIVE_VERSION-bin
 
 	curl -fSLs \
@@ -43,6 +44,6 @@ else
 	# the correct path in the destination container in the Dockerfile workflow.
 	export RH_MYSQL_CONNECTOR_PATCH_VERSION=00001
 	curl -fSLs \
-		http://download.eng.bos.redhat.com/brewroot/packages/mysql-mysql-connector-java/${MYSQL_VERSION}.redhat_${RH_MYSQL_CONNECTOR_PATCH_VERSION}/1/maven/mysql/mysql-connector-java/${MYSQL_VERSION}.redhat-${RH_MYSQL_CONNECTOR_PATCH_VERSION}/mysql-connector-java-${MYSQL_VERSION}.redhat-${RH_MYSQL_CONNECTOR_PATCH_VERSION}.jar \
+		$MAVEN_REPO_URL/mysql/mysql-connector-java/${MYSQL_VERSION}.redhat-${RH_MYSQL_CONNECTOR_PATCH_VERSION}/mysql-connector-java-${MYSQL_VERSION}.redhat-${RH_MYSQL_CONNECTOR_PATCH_VERSION}.jar \
 		-o /build/mysql-connector-java.jar
 fi
